@@ -16,6 +16,7 @@ int	main(int argc, char **argv)
 
 	print_header(&trt);
 
-	// printf("%s\n", trt.hostname);
+	sending_probe(&trt);
+
 	return (0);
 }
