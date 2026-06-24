@@ -63,4 +63,6 @@ void	init_socket(t_trt *trt)
 		exit (1);
 	}
 
+
+
 }
