@@ -21,23 +21,32 @@
 typedef struct s_trt
 {
 
-	bool	reached;
+	bool				reached;
 
+	int		 			send_fd;
+	int					recv_fd;
+	int					max_hops;
+	int					nprobes;
+	int					probes_sent;
+	int					initial_port;
+	int					packet_size; //payload
+	int					ttl;
+	int					timeout;
+	int					ip_shown;
+	int					first;
+	int					replied;
+	int					expected_port;
 
-	int 	send_fd;
-	int		recv_fd;
-	int		max_hops;
-	int		nprobes;
-	int		probes_sent;
-	int		initial_port;
-	int		packet_size; //payload
-	int		ttl;
-	int		timeout;
+	double				rtt;
 
-	char	hostname[HOSTNAME_SIZE];
+	struct in_addr		hop_ip;
+	struct in_addr		last_ip;
 
+	struct timeval		start;
 
-	struct sockaddr_in 	dest_addr;
+	struct sockaddr_in	dest_addr;
+
+	char				hostname[HOSTNAME_SIZE];
 
 }	t_trt;
 
@@ -62,7 +71,9 @@ int	ft_strcmp(const char *s1, const char *s2);
 size_t	ft_strlen(const char *s);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 
-
-
+// PROBE.C
+void	sending_probe(t_trt *trt);
+int		receiving_probe(t_trt *trt, struct	timeval *start, struct in_addr *hop_ip, double *rtt);
+void	loop(t_trt *trt, struct	timeval *start, int ip_shown, int first);
 
 #endif
