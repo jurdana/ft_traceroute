@@ -72,8 +72,10 @@ size_t	ft_strlen(const char *s);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 
 // PROBE.C
+void	print_result(t_trt *trt);
+void	send_one(t_trt *trt);
 void	sending_probe(t_trt *trt);
-int		receiving_probe(t_trt *trt, struct	timeval *start, struct in_addr *hop_ip, double *rtt);
-void	loop(t_trt *trt, struct	timeval *start, int ip_shown, int first);
+int		receiving_probe(t_trt *trt);
+
 
 #endif
