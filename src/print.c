@@ -16,7 +16,6 @@ void	print_header(t_trt *trt)
 	char *ip_str;
 
 	ip_str = inet_ntoa(trt->dest_addr.sin_addr);
-
 	printf("traceroute to %s (%s), %d hops max, %d byte packets\n",
 		trt->hostname, ip_str, trt->max_hops, trt->packet_size);
 }
