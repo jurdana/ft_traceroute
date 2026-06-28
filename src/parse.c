@@ -5,7 +5,6 @@ void	parse_args(int argc, char **argv, t_trt *trt)
 	int i;
 
 	i = 1;
-
 	if (argc < 2)
 		print_help(2);
 	while (i < argc)
