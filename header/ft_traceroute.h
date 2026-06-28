@@ -1,8 +1,8 @@
 #ifndef FT_TRACEROUTE_H
 #define FT_TRACEROUTE_H
 
-
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <netinet/in.h>
@@ -20,7 +20,6 @@
 
 typedef struct s_trt
 {
-
 	bool				reached;
 
 	int		 			send_fd;
@@ -47,12 +46,7 @@ typedef struct s_trt
 	struct sockaddr_in	dest_addr;
 
 	char				hostname[HOSTNAME_SIZE];
-
 }	t_trt;
-
-
-// MAIN.C
-
 
 // INIT.C
 void	init_hostname(t_trt *trt);
@@ -76,6 +70,5 @@ void	print_result(t_trt *trt);
 void	send_one(t_trt *trt);
 void	sending_probe(t_trt *trt);
 int		receiving_probe(t_trt *trt);
-
 
 #endif
