@@ -5,10 +5,6 @@ void	init_hostname(t_trt *trt)
 	int				status;
 	struct addrinfo	*res;
 	struct addrinfo hints = {0};
-	// char			*ip_str;
-	// char			ip_str[INET_ADDRSTRLEN];
-	
-	// memset(&hints, 0, sizeof(hints));
 
 	hints.ai_family = AF_INET;
 	status = getaddrinfo(trt->hostname, NULL, &hints, &res);
@@ -21,11 +17,6 @@ void	init_hostname(t_trt *trt)
 	trt->dest_addr = *((struct sockaddr_in *)res->ai_addr);
 	
 	freeaddrinfo(res);
-
-	// ip_str = inet_ntoa(trt->dest_addr.sin_addr);
-
-	// printf("traceroute to %s (%s), %d hops max, %d byte packets\n",
-	// 	trt->hostname, ip_str, trt->max_hops, trt->packet_size);
 }
 
 void	init(t_trt *trt)
@@ -52,6 +43,7 @@ void	init_socket(t_trt *trt)
 	if (trt->recv_fd < 0)
 	{
 		dprintf(2, "ft_traceroute: socket: %s\n", strerror(errno));
+		close(trt->send_fd);
 		exit (1);
 	}
 
@@ -62,7 +54,4 @@ void	init_socket(t_trt *trt)
 		dprintf(2, "ft_traceroute: setsockopt: %s\n", strerror(errno));
 		exit (1);
 	}
-
-
-
 }
