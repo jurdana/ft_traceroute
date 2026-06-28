@@ -1,9 +1,7 @@
 #include "../header/ft_traceroute.h"
 
-
 int	main(int argc, char **argv)
 {
-
 	t_trt trt = {0};
 
 	init(&trt);
