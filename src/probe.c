@@ -26,7 +26,6 @@ void	print_result(t_trt *trt)
 	}
 }
 
-
 void	send_one(t_trt *trt)
 {
 	char	payload[32] = {0};
@@ -45,10 +44,8 @@ void	send_one(t_trt *trt)
 	print_result(trt);
 }
 
-
 void	sending_probe(t_trt *trt)
 {
-
 	trt->ttl = 1;
 	trt->dest_addr.sin_port = htons(trt->initial_port);
 	while (trt->ttl <= trt->max_hops)
@@ -68,10 +65,9 @@ void	sending_probe(t_trt *trt)
 			break;
 		trt->ttl++;
 	}
+	close(trt->send_fd);
+	close(trt->recv_fd);
 }
-
-
-
 
 int	receiving_probe(t_trt *trt)
 {
@@ -93,39 +89,7 @@ int	receiving_probe(t_trt *trt)
 					(struct sockaddr *)&from, &fromlen);
 		gettimeofday(&end, NULL);
 
-		if (n > 0)
-		{
-			// Layer 1: starts at the beginning of the buffer, cast buffer to (struct ip *) to read its fields.
-			ip_ext = (struct ip *)buffer;
-			// ip_hl IP header length, in 4-byte owrds.
-			hl_ext = ip_ext->ip_hl * 4;
-			
-			// Layer 2: ICMP header starts right after the outer IP.
-			icmp = (struct icmp *)(buffer + hl_ext);
-			trt->rtt = (end.tv_sec - trt->start.tv_sec) * 1000.0
-					+ (end.tv_usec - trt->start.tv_usec) / 1000.0;
-			// Router IP, source of the outer packet.
-			trt->hop_ip = from.sin_addr;
-			// type 3 (destination unreachable), code 3 (port unreachable).
-			if (icmp->icmp_type == 3 && icmp->icmp_code == 3)
-				trt->reached = true;
-
-			// Layer 3: inner IP header (our original packet, copied by
-			// the router) starts after the ICMP header (8 bytes).
-			struct ip	*ip_in = (struct ip *)(buffer + hl_ext + 8);
-			int			 hl_in = ip_in->ip_hl * 4;	// inner IP header length
-
-			// Layer 4: inner UDP header (our copy) starts after the inner IP.
-			struct udphdr	*udp_in = (struct udphdr *)((char *)ip_in + hl_in);
-
-			// The destination port we originally sent, copied back by the
-			// router. ntohs converts from network to host byte order.
-			uint16_t	dport = ntohs(udp_in->uh_dport);
-
-				
-			return (1);
-		}
-		else if (n < 0)
+		if (n < 0)
 		{
 			if (errno == EAGAIN || errno == EWOULDBLOCK)
 				return (0);
@@ -135,6 +99,36 @@ int	receiving_probe(t_trt *trt)
 				exit(1);
 			}
 		}
+		// Outer IP header
+		ip_ext = (struct ip *)buffer;
+		// ip_hl IP header length, in 4-byte owrds.
+		hl_ext = ip_ext->ip_hl * 4;
+		// Bounds check before reading the inner IP header.
+		if (n < hl_ext + 8 + (int)sizeof(struct ip))
+    		continue;
+		// Inner IP header = our original packet, copied after the 8-byte ICMP header.
+		struct ip	*ip_in = (struct ip *)(buffer + hl_ext + 8);
+		int			 hl_in = ip_in->ip_hl * 4;	// inner IP header length
+
+		int dport_off = hl_ext + 8 + hl_in + 2;
+		if (n < dport_off + 2)
+		    continue;
+
+		// Inner UDP header: the destination port we originally sent.
+		struct udphdr	*udp_in = (struct udphdr *)((char *)ip_in + hl_in);
+		uint16_t	dport = ntohs(udp_in->uh_dport);
+		// Matching: ignore replies that don't belong to the awaited probe.
+		if (dport != trt->expected_port)
+			continue;
+		// ICMP header: read type/code to detect arrival at destination.
+		icmp = (struct icmp *)(buffer + hl_ext);
+		trt->rtt = (end.tv_sec - trt->start.tv_sec) * 1000.0
+				+ (end.tv_usec - trt->start.tv_usec) / 1000.0;
+		trt->hop_ip = from.sin_addr;
+		// Type 3 (Destination Unreachable) + code 3 (Port Unreachable) = arrived.
+		if (icmp->icmp_type == 3 && icmp->icmp_code == 3)
+			trt->reached = true;
+
+		return (1);
 	}
-	return (0);
 }
