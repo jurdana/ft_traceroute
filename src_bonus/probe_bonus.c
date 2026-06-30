@@ -1,5 +1,29 @@
 #include "../header/ft_traceroute_bonus.h"
 
+void	print_addr(t_trt *trt)
+{
+	char				ip_buffer[INET_ADDRSTRLEN];
+	char				host[NI_MAXHOST];
+	struct sockaddr_in	sa;
+
+	ft_strlcpy(ip_buffer, inet_ntoa(trt->hop_ip), sizeof(ip_buffer));
+
+	if (trt->numeric)
+	{
+		printf("%s", ip_buffer);
+		return ;
+	}
+	memset(&sa, 0, sizeof(sa));
+	sa.sin_family = AF_INET;
+	sa.sin_addr = trt->hop_ip;
+	if (getnameinfo((struct sockaddr *)&sa, sizeof(sa),
+						host, sizeof(host), NULL, 0, NI_NAMEREQD) == 0)
+		printf("%s (%s)", host, ip_buffer);
+	else	
+		printf("%s (%s)", ip_buffer, ip_buffer);
+
+}
+
 void	print_result(t_trt *trt)
 {
 	if (trt->replied)
@@ -7,9 +31,10 @@ void	print_result(t_trt *trt)
 		if (!trt->ip_shown || trt->hop_ip.s_addr != trt->last_ip.s_addr)
 		{
 			if (trt->first)
-				printf("  %s", inet_ntoa(trt->hop_ip));
+				printf("  ");
 			else
-				printf(" %s", inet_ntoa(trt->hop_ip));
+				printf(" ");
+			print_addr(trt);
 			trt->last_ip = trt->hop_ip;
 			trt->ip_shown = 1;
 		}
