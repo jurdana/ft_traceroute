@@ -3,7 +3,7 @@
 void	print_help(int fd)
 {
 	dprintf(fd, "Usage:\n"
-		"  ft_traceroute [ -nh ] [ -f first_ttl ] [ -m max_ttl ] "
+		"  ft_traceroute [ -n ] [ -f first_ttl ] [ -m max_ttl ] "
 		"[ -p port ] [ -q nqueries ] host\n\n"
 		"Options:\n"
 		"  -f first_ttl  --first=first_ttl\n"
