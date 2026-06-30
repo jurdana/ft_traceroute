@@ -74,10 +74,20 @@ void	parse_args(int argc, char **argv, t_trt *trt)
 				break;
             case 'h': print_help(1); break;
             case ':':
-                dprintf(2, "ft_traceroute: option requires an argument -- '%c'\n", optopt);
-                exit(2);
+				{
+					char *arg_name;
+
+					if (optopt == 'm')      arg_name = "max_ttl";
+					else if (optopt == 'p') arg_name = "port";
+					else if (optopt == 'q') arg_name = "nqueries";
+					else if (optopt == 'f') arg_name = "first_ttl";
+					else                    arg_name = "";
+					dprintf(2, "Option `-%c' (argc %d) requires an argument: `-%c %s'\n",
+						optopt, optind - 1, optopt, arg_name);
+					exit(2);
+				}
             case '?':
-                dprintf(2, "ft_traceroute: invalid option -- '%c'\n", optopt);
+                dprintf(2, "Bad option `%s' (argc %d)\n", argv[optind - 1], optind - 1);
                 exit(2);
 		}
 	}
