@@ -97,12 +97,7 @@ void	parse_args(int argc, char **argv, t_trt *trt)
 		exit(2);
 	}
 	if (argv[optind])
-	{
-		ft_strlcpy(trt->hostname, argv[optind], HOSTNAME_SIZE);
-	}
+    	ft_strlcpy(trt->hostname, argv[optind], HOSTNAME_SIZE);
 	else
-	{
-		fprintf(stderr,"ft_traceroute: missing host operand\n");
-		exit(2);
-	}
+	    print_help(2);
 }
