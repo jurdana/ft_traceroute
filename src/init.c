@@ -11,6 +11,8 @@ void	init_hostname(t_trt *trt)
 	if (status != 0)
 	{
 		dprintf(2, "%s: %s\n", trt->hostname, gai_strerror(status));
+		dprintf(2, "Cannot handle \"host\" cmdline arg `%s' on position 1 (argc 1)\n",
+        	trt->hostname);
 		exit (2);
 	}
 
