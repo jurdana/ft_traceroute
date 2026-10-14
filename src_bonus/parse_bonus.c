@@ -49,7 +49,7 @@ void	parse_args(int argc, char **argv, t_trt *trt)
 		switch (opt) {
 			case 'm':
 				trt->max_hops = parse_number(optarg, opt);
-				if (trt->max_hops < 1 || trt->max_hops > 255)
+				if (trt->max_hops < 0 || trt->max_hops > 255)
 				{
 					dprintf(2, "max hops cannot be more than 255\n");
 					exit(2);
