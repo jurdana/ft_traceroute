@@ -11,8 +11,8 @@ void	init_hostname(t_trt *trt)
 	if (status != 0)
 	{
 		dprintf(2, "%s: %s\n", trt->hostname, gai_strerror(status));
-		dprintf(2, "Cannot handle \"host\" cmdline arg `%s' on position 1 (argc 1)\n",
-        	trt->hostname);
+		dprintf(2, "Cannot handle \"host\" cmdline arg `%s' on position 1 (argc %d)\n",
+			trt->hostname, trt->host_index);
 		exit (2);
 	}
 
@@ -26,7 +26,7 @@ void	init(t_trt *trt)
 	trt->max_hops = 30;
 	trt->packet_size = 60;
 	trt->nprobes = 3;
-	trt->timeout = 3;
+	trt->timeout = 1;
 	trt->initial_port = 33434;
 	trt->first_ttl = 1;
 	trt->numeric = false;

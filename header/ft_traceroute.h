@@ -35,7 +35,7 @@ typedef struct s_trt
 	int					first;
 	int					replied;
 	int					expected_port;
-	int     host_index;
+	int     			host_index;
 	
 	double				rtt;
 

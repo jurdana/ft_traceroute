@@ -97,7 +97,10 @@ void	parse_args(int argc, char **argv, t_trt *trt)
 		exit(2);
 	}
 	if (argv[optind])
-    	ft_strlcpy(trt->hostname, argv[optind], HOSTNAME_SIZE);
+	{
+		ft_strlcpy(trt->hostname, argv[optind], HOSTNAME_SIZE);
+		trt->host_index = optind;
+	}
 	else
 	    print_help(2);
 }
