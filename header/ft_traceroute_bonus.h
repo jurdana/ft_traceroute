@@ -1,5 +1,5 @@
-#ifndef FT_TRACEROUTE_H
-#define FT_TRACEROUTE_H
+#ifndef FT_TRACEROUTE_BONUS_H
+#define FT_TRACEROUTE_BONUS_H
 
 #include <stdio.h>
 #include <ctype.h>
@@ -72,6 +72,7 @@ size_t	ft_strlen(const char *s);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 
 // PROBE.C
+void	print_addr(t_trt *trt);
 void	print_result(t_trt *trt);
 void	send_one(t_trt *trt);
 void	sending_probe(t_trt *trt);
