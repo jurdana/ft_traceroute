@@ -35,7 +35,8 @@ typedef struct s_trt
 	int					first;
 	int					replied;
 	int					expected_port;
-
+	int     host_index;
+	
 	double				rtt;
 
 	struct in_addr		hop_ip;
