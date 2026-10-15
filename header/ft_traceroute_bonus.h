@@ -22,35 +22,35 @@
 
 typedef struct s_trt
 {
-	bool				reached;
-	bool				numeric;
+	bool				reached;		// destination reached -> stop the loop
+	bool				numeric;		// -n : print raw IPs, skip reverse DNS
 
-	int		 			send_fd;
-	int					recv_fd;
-	int					max_hops;
-	int					nprobes;
-	int					probes_sent;
-	int					initial_port;
-	int					packet_size; //payload
-	int					ttl;
-	int					timeout;
-	int					ip_shown;
-	int					first;
-	int					replied;
-	int					expected_port;
-	int					first_ttl;
-	int     			host_index;
+	int		 			send_fd;		// UDP socket used to send probes
+	int					recv_fd;		// raw ICMP socket used to read replies
+	int					max_hops;		// -m : highest TTL to try (default 30)
+	int					nprobes;		// -q : probes sent per hop (default 3)
+	int					probes_sent;	// running count, drives the probe port
+	int					initial_port;	// -p : base destination port (default 33434)
+	int					packet_size;	// packet size shown in the banner
+	int					ttl;			// current TTL (hop number)
+	int					timeout;		// per-probe receive timeout, in seconds
+	int					ip_shown;		// has an IP already been printed on this line
+	int					first;			// is this the first item printed on the line
+	int					replied;		// did the current probe get a reply (1/0)
+	int					expected_port;	// dest port awaited for the current probe
+	int					first_ttl;		// -f : starting TTL (default 1)
+	int     			host_index;		// host's argv index, for the error message
 
-	double				rtt;
+	double				rtt;			// current probe round-trip time, in ms
 
-	struct in_addr		hop_ip;
-	struct in_addr		last_ip;
+	struct in_addr		hop_ip;			// IP of the router that replied
+	struct in_addr		last_ip;		// last IP printed on this line
 
-	struct timeval		start;
+	struct timeval		start;			// current probe send timestamp
 
-	struct sockaddr_in	dest_addr;
+	struct sockaddr_in	dest_addr;		// resolved destination (IP + per-probe port)
 
-	char				hostname[HOSTNAME_SIZE];
+	char				hostname[HOSTNAME_SIZE];	// target as given on the command line
 }	t_trt;
 
 // INIT.C

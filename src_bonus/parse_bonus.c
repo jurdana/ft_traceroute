@@ -1,5 +1,9 @@
 #include "../header/ft_traceroute_bonus.h"
 
+/*
+Returns true if str is a valid integer (optional +/- sign then digits).
+Rejects NULL, empty, a lone sign, and any non-digit character.
+*/
 bool	is_number(char *str)
 {
 	int i = 0;
@@ -19,6 +23,11 @@ bool	is_number(char *str)
 	return (true);
 }
 
+/*
+Converts optarg to an int, or exits 2 with the reference "Cannot handle"
+meesage if it is not numeric. opt is the option letter, used to build
+that message. Bounds are checked by the caller, not here.
+*/
 int parse_number(char *optarg, int opt)
 {
     if (!is_number(optarg))
@@ -30,6 +39,12 @@ int parse_number(char *optarg, int opt)
     return ((int)strtol(optarg, NULL, 10));
 }
 
+/*
+Parses the command line with getopt_long (short and long forms):
+-m/-p/-q/-f take a value, -n toggles numeric output, --help prints usage.
+Validates each value's range, reports argument errors like the real
+traceroute, then stores the host (first non-option) and its argv index.
+*/
 void	parse_args(int argc, char **argv, t_trt *trt)
 {
 	int opt;

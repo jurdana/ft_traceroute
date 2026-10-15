@@ -1,5 +1,8 @@
 #include "../header/ft_traceroute_bonus.h"
 
+/*
+Prints the usage/help text (options and arguments) to fd, then exits 0.
+*/
 void	print_help(int fd)
 {
 	dprintf(fd, "Usage:\n"
@@ -23,6 +26,10 @@ void	print_help(int fd)
 	exit(0);
 }
 
+/*
+Prints the traceroute banner line: target name, resolved IP,
+max hops and packet size.
+*/
 void	print_header(t_trt *trt)
 {
 	char *ip_str;

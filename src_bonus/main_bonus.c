@@ -1,5 +1,9 @@
 #include "../header/ft_traceroute_bonus.h"
 
+/*
+Program entry: sets defaulst, parses args, resolves the host,
+opens the sockets, prints the banner, then runs the trace.
+*/
 int	main(int argc, char **argv)
 {
 	t_trt trt = {0};

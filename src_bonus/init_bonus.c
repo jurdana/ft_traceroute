@@ -1,5 +1,10 @@
 #include "../header/ft_traceroute_bonus.h"
 
+/*
+Resolves the target hostname/IP into an IPv4 sockaddr (AF_INET only).
+On failure, prints the resolver error plus the reference "Cannot handle"
+line and exits 2. On success, stores the address in trt->dest_addr.
+*/
 void	init_hostname(t_trt *trt)
 {
 	int				status;
@@ -21,6 +26,11 @@ void	init_hostname(t_trt *trt)
 	freeaddrinfo(res);
 }
 
+/*
+Sets all default option values before argument parsing:
+30 max hops, 60-byte packets, 3 probes/hop, 1s timeout,
+base port 33434, first TTL 1, DNS resolution on.
+*/
 void	init(t_trt *trt)
 {
 	trt->max_hops = 30;
@@ -32,6 +42,11 @@ void	init(t_trt *trt)
 	trt->numeric = false;
 }
 
+/*
+Opens the two sockets: a UDP socket to send probes and a raw ICMP
+socket to receive the replies, then sets the receive timeout
+(SO_RCVTIMEO). Exits 1 on any failure (raw socket needs root).
+*/
 void	init_socket(t_trt *trt)
 {
 	struct timeval tv;

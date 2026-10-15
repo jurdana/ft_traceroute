@@ -1,5 +1,10 @@
 #include "../header/ft_traceroute_bonus.h"
 
+/*
+Prints the current hop's address. With -n, prints the raw IP only.
+Otherwise does a reverse DNS lookup (getnameinfo): "name (ip)" on
+success, "ip (ip)" when no name is found.
+*/
 void	print_addr(t_trt *trt)
 {
 	char				ip_buffer[INET_ADDRSTRLEN];
@@ -24,6 +29,11 @@ void	print_addr(t_trt *trt)
 
 }
 
+/*
+Prints one probe's result on the current hop line: the address (only
+when it differs from the last one shown) followed by the RTT, or "*"
+on time out. Handles the leading-space rule (2 spaces first, then 1).
+*/
 void	print_result(t_trt *trt)
 {
 	if (trt->replied)
@@ -51,6 +61,11 @@ void	print_result(t_trt *trt)
 	}
 }
 
+/*
+Sends one probe: timestamps the departure, sets the pre-probe
+destination port, sends the UDP datagram, waits for its reply,
+then prints the result. Exits 1 if sendto fails.
+*/
 void	send_one(t_trt *trt)
 {
 	char	payload[32] = {0};
@@ -69,6 +84,11 @@ void	send_one(t_trt *trt)
 	print_result(trt);
 }
 
+/*
+Main loop : for each TTL from first_ttl to max_hops, sets the IP TTL,
+prints the hop number, sends nprobes probes, and stops once the
+destination is reached. Closes both sockets at the end.
+*/
 void	sending_probe(t_trt *trt)
 {
 	trt->ttl = trt->first_ttl;
@@ -94,6 +114,13 @@ void	sending_probe(t_trt *trt)
 	close(trt->recv_fd);
 }
 
+/*
+Receives and validates the ICMP reply for the awaited probe.
+Reads raw packets until one matches our destination port (dissecting
+out IP -> ICMP -> inner IP -> inner UDP), with bounds checks on each
+layer. Fills rtt and hop_ip, sets reached on Port Unreachable (type 3
+code 3). Returns 1 on a matching reply, 0 on timeout.
+*/
 int	receiving_probe(t_trt *trt)
 {
 	char				buffer[512];
