@@ -1,0 +1,21 @@
+sudo ./ft_traceroute 1.1.1.1
+
+sudo ./ft_traceroute_bonus -f 3 1.1.1.1
+traceroute -f 3 1.1.1.1
+
+sudo ./ft_traceroute_bonus -n 1.1.1.1
+traceroute -n 1.1.1.1
+
+sudo ./ft_traceroute_bonus -m 3 1.1.1.1
+traceroute -m 3 1.1.1.1
+
+sudo ./ft_traceroute_bonus -q 3 1.1.1.1
+traceroute -q 3 1.1.1.1
+
+
+
+
+terminal 1
+sudo tcpdump -ni any udp and dst host 1.1.1.1
+terminal 2
+sudo ./ft_traceroute_bonus -p 50000 1.1.1.1
